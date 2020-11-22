@@ -18,7 +18,7 @@ The purpose of this project as to create a command line application to build a s
 
 
 ## Installation
-To install dependencies, run npm i 
+To install dependencies, run npm i and install Inquirer and Jest 
 
 ## Technologies 
 * Node.js
