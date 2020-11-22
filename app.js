@@ -10,53 +10,141 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
-const employees = [];
 
-function questions() {
+let employees = [];
 
-    inquirer.prompt([
-        {
-            type: "list",
-            name: "role",
-            message: "What is your role?",
-            choices: ["Manager", "Engineer", "Intern"],
-        },
+function createManager() {
+    inquirer.prompt([  
+
+    
         {
             type: "input",
             name: "name",
-            message: "What is your name",
+            message: "Provide employee name",
 
         },
         {
             type: "input",
             name: "id",
-            message: "What is your employee ID?",
-        } {
+            message: "What is the employee ID?",
+        },
+         {
             type: "input",
             name: "email",
-            message: "What is your email?",
+            message: "Enter in employee email",
         },
         // manager questions
         {
-            input: "input",
+            type: "input",
             name: "officeNumber",
-            message: "What is your office number?",
-            // how to connect to manager, engineer, and intern specifically?
+            message: "What is the manager's office number?",
+      
         },
-        // engineer questions
-        {
-            input: "input",
-            name: "github",
-            message: "What is your GitHub username?",
-        }, 
-        // intern questions
-        {
-            input: "input",
-            name: "school",
-            message: "What school do you attend?",
-        }
-    ])
+    ]).then(answers => {
+        const manager = new Manager(answers.name, answers.id, answers.email, answers.officeNumber);
+        employees.push(manager);
+        start();
+    })
 }
+function createEngineer() {
+    inquirer.prompt([  
+
+    
+        {
+            type: "input",
+            name: "name",
+            message: "Provide employee name",
+
+        },
+        {
+            type: "input",
+            name: "id",
+            message: "What is the employee ID?",
+        },
+         {
+            type: "input",
+            name: "email",
+            message: "Enter in employee email",
+        },
+        {
+            type: "input",
+            name: "github",
+            message: "What is the GitHub username?",
+        }, 
+    ]).then(answers => {
+        const engineer = new Engineer (answers.name, answers.id, answers.email, answers.github);
+        employees.push(engineer);
+        start()
+    })
+}
+
+function createIntern() {
+    inquirer.prompt([  
+
+    
+        {
+            type: "input",
+            name: "name",
+            message: "Provide employee name",
+
+        },
+        {
+            type: "input",
+            name: "id",
+            message: "What is the employee ID?",
+        },
+         {
+            type: "input",
+            name: "email",
+            message: "Enter in employee email",
+        },
+        {
+            type: "input",
+            name: "school",
+            message: "Provide intern's school",
+        }, 
+    ]).then(answers => {
+        const intern = new Intern (answers.name, answers.id, answers.email, answers.school);
+        employees.push(intern);
+        start();
+    })
+};
+
+function buildTeam() {
+    fs.writeFileSync(outputPath, render(employees))
+};
+
+function start() {
+
+    inquirer.prompt(
+        {
+            type: "list",
+            name: "options",
+            message: "What would you like to do?",
+            choices: ["Add Manager", "Add Engineer", "Add Intern", "Build Team"],
+        }
+    
+    ).then(answers => {
+        switch(answers.options) {
+            case "Add Manager" :
+                createManager();
+            break;
+            case "Add Engineer" :
+                createEngineer(); 
+            break;
+            case "Add Intern" :
+                createIntern(); 
+            break;
+            case "Build Team" :
+                buildTeam(); 
+            break;
+            default : 
+            start();
+
+        }
+    })
+};
+start();
 
 
 
